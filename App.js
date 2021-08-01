@@ -7,6 +7,13 @@ import firebase from 'firebase/app';
 import RegisterScreen from './Components/auth/register';
 import LoginScreen from './Components/auth/Login'
 import {View , Text} from 'react-native'
+import {Provider} from 'react-redux';
+import rootReducer from './redux/reducers'
+import {createStore , applyMiddleware} from 'redux'
+import thunk from 'redux-thunk'
+import MainScreen from './Components/Main'
+const store =createStore(rootReducer , applyMiddleware(thunk))
+
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -70,10 +77,9 @@ class App extends Component {
       )
     }
     return (
-      <View style={{ flex: 1, justifyContent: 'center' }}>
-      <Text>User Is Logged In :D</Text>
-    </View>
-      
+      <Provider store = {store}>
+      <MainScreen/>
+      </Provider>
     );
   }
 }
