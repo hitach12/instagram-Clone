@@ -32,7 +32,7 @@ class register extends Component {
     }
     render() {
         return (
-            <View>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
                 <TextInput placeholder ="name"
                 onChangeText={(name) => this.setState({name})}/>
                 <TextInput placeholder ="email"
