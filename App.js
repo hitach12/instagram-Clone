@@ -1,18 +1,41 @@
+import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import React , {Component} from 'react';
-import {NavigationContainer, StackActions} from '@react-navigation/native';
+import * as React from 'react';
+import  {Component} from 'react';
+import {NavigationContainer, DrawerActions} from '@react-navigation/native';
 import LandingScreen from './Components/auth/Landing';
 import {createStackNavigator} from '@react-navigation/stack';
 import firebase from 'firebase/app';
 import RegisterScreen from './Components/auth/register';
 import LoginScreen from './Components/auth/Login'
-import {View , Text} from 'react-native'
+import {View , Text, Image, Button} from 'react-native'
 import {Provider} from 'react-redux';
 import rootReducer from './redux/reducers'
 import {createStore , applyMiddleware} from 'redux'
 import thunk from 'redux-thunk'
 import MainScreen from './Components/Main'
+import AddScreen from './Components/main/Add'
+import LogScreen from './Components/auth/Log';
+import RegScreen from './Components/auth/Reg'
+import LandScreen from './Components/auth/Land'
+import * as Animatable from 'react-native-animatable';
+
+
+
+
+
+
 const store =createStore(rootReducer , applyMiddleware(thunk))
+
+
+function MyDrawer() {
+  return (
+    <Drawer.Navigator>
+      <Drawer.Screen name="Feed" component={LandScreen} />
+      <Drawer.Screen name="Article" component={RegScreen} />
+    </Drawer.Navigator>
+  );
+}
 
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -39,6 +62,12 @@ class App extends Component {
     this.state={
       loaded : false
     }
+    
+    this.toggleDrawer=this.toggleDrawer.bind(this)
+  }
+  toggleDrawer(){
+    //Props to open/close the drawer
+    console.log(navigation.toggleDrawer());
   }
   componentDidMount(){
     firebase.auth().onAuthStateChanged((user) => {
@@ -59,8 +88,8 @@ class App extends Component {
     const {loggedIn , loaded}  = this.state;
     if(!loaded){
       return (
-          <View style={{ flex: 1, justifyContent: 'center' }}>
-            <Text>Loading ...!</Text>
+          <View style={{ flex: 1, justifyContent: 'center' , alignItems:'center'}}>
+            <Image source= {require('./assets/Spinner.svg')} style = {{ width: 200, height: 200 }}></Image>
           </View>
       )
     }
@@ -69,19 +98,29 @@ class App extends Component {
       return (
         <NavigationContainer>
         <Stack.Navigator initialRouteName = "Landing">
-          <Stack.Screen name="Landing" component={LandingScreen} options={{headerShown:false}}/>
-          <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown:false}}/>
-          <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}}/>
+          <Stack.Screen name="Landing" component={LandScreen} options={{headerShown:false}}/>
+          <Stack.Screen name="Register" component={RegScreen} options={{headerShown:false}}/>
+          <Stack.Screen name="Login" component={LogScreen} options={{headerShown:false}}/>
+          
         </Stack.Navigator>
         </NavigationContainer>
       )
     }
+    // test = () => {
+    //   console.log("Hello");
+    //   console.log(this.props);
+    // }
+    //     this.props.navigation.openDrawer();
+    
     return (
       <Provider store = {store}>
         <NavigationContainer>
-      <Stack.Navigator initialRouteName = "Main">
+       <Stack.Navigator initialRouteName = "Main">
           <Stack.Screen name="Main" component={MainScreen} options={{headerShown:false}}/>
-        </Stack.Navigator>
+          <Stack.Screen name="Add" component={AddScreen}/>
+        </Stack.Navigator> 
+        {/*  */}
+        
         </NavigationContainer>
       </Provider>
     );

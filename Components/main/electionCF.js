@@ -5,15 +5,17 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { 
   View, 
   Text, 
+  Button,
   ScrollView,
   TouchableOpacity, 
+  TextInput,
   Platform,
   StyleSheet ,
   StatusBar,
   Alert,
   Picker,
   SafeAreaView,
-  FlatList, TextInput
+  FlatList
 } from 'react-native';
 import axios from 'axios';
 import * as Animatable from 'react-native-animatable';
@@ -22,62 +24,35 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import { useTheme , Avatar, Button, Card, Title } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import { fetchData } from '../../redux/actions';
 import Svg, {
   Use,
   Image,
 } from 'react-native-svg';
 
+import Cart from './Cart';
 
-function Feed(props) {
+
+const renderItem = ({ item }) => (
+    <Cart partie={item.partie} />
+  );
+
+function ElectionCF(props) {
+    
+         
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
   const [data,setData] = useState([])
-      const [value, setValue] = useState(2);
-
-  const Cart = ({partie}) => {
-
-    return(
-    <View >
-    <Card style={{margin:20 , borderColor:"red"  , shadowColor:'grey' , shadowOffset:{  width: 5,  height:5  },shadowOpacity: 0.5 , shadowRadius :5 }  }>
-      <Card.Title title={partie} 
-       right={(props) => <Avatar.Image 
-        size={80}
-        source={require('../../assets/logo.jpg')}/>} 
-        titleStyle={{textAlign:"center"}}
-        rightStyle={{margin : 5}}/>
-      <Card.Content>
-        <Title style={{textAlign:"center"}}>عدد الأصوات</Title>
-        <TextInput
-        label="عدد الأصوات"
-        onChangeText= {(val) => {setValue(val)
-          console.log(value)}}
-      />
-      </Card.Content>
-      {/* <Card.Actions style={{alignItems:"center"}}>
-        <Button onPress={() => {
-          setValue({...value,title:partie})
-          setItems(...items, value)
-          console.log(items)
-        }
-        }
-        
-        >حفظ</Button>
-        </Card.Actions> */}
-    </Card>
-    </View>
-    );}
-  
-  const renderItem = ({ item }) => (
-      <Cart partie={item.partie} />
-    );
-  
-
-
  
   useEffect(() => {
     if(props.currentData && props.currentData.length>0){
+        console.log( props.currentData[0])
+        let array = Array.from(props.currentData);
+    setItems(array.map(item => { return {label:item.partie , value : item.num}}))
     setData(props.currentData)
+    // props.currentData.forEach(element => items.push({label:element.partie , value : element.num}))
 }
 },[props.currentData]) ;
 
@@ -129,7 +104,7 @@ if (!data) {
           <StatusBar backgroundColor='#009387' barStyle="light-content"/>
           
         <View style={styles.header}>
-            <Text style={styles.text_header}>اضافة محضر انتاخابات الجماعة - اللائحة المشرتكة -</Text>
+            <Text style={styles.text_header}>اضافة محضر انتاخابات الجماعة - لائحة المرأة  -</Text>
         </View>
         
         <Animatable.View 
@@ -152,10 +127,10 @@ if (!data) {
               </View>
                 : 
                 <FlatList
-                  data={data}
-                  renderItem={renderItem}
-                  keyExtractor={item => item.num}
-                />    
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={item => item.num}
+    />    
                 }
     
             
@@ -210,7 +185,7 @@ const styles = StyleSheet.create({
       paddingBottom: 50
   },
   footer: {
-      flex: 3,
+      flex: 10,
       backgroundColor: '#fff',
       borderTopLeftRadius: 30,
       borderTopRightRadius: 30,
@@ -280,4 +255,4 @@ const mapStateToProps = (store) => ({
 
 })
 const mapDispatchProps =  (dispatch) => bindActionCreators({fetchData},dispatch)
-export default connect (mapStateToProps, mapDispatchProps)(Feed);
+export default connect (mapStateToProps, mapDispatchProps)(ElectionCF);

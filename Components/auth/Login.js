@@ -3,6 +3,7 @@ import {View , Button , TextInput} from 'react-native'
 import firebase from 'firebase/app';
 
 
+
 class Login extends Component {
 
     constructor(props){
@@ -27,6 +28,7 @@ class Login extends Component {
     }
     render() {
         return (
+
             <View style={{ flex: 1, justifyContent: 'center' }} >
                 <TextInput placeholder ="email"
                 onChangeText={(email) => this.setState({email})}/>
